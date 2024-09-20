@@ -2,10 +2,36 @@
 * {
   margin: 0px;
   padding: 0px;
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins";
   box-sizing: border-box;
 }
 
 body {
-  background: red;
+  height: 100vh;
+  
+}
+
+.container{
+  display: flex;
+  align-items: center;
+}
+
+.weather-input{
+  width: 25%;
+  position: fixed;
+  inset: 0;
+  background: #48c9b0;
+  padding: 1rem 2.5rem;
+}
+
+.input-group{
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+.input-group input{
+  background: #f8f8f8;
+
 }
