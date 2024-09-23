@@ -17,7 +17,7 @@ body {
 }
 
 .weather-input{
-  width: 25%;
+  width: 40%;
   position: fixed;
   inset: 0;
   background: #48c9b0;
@@ -33,6 +33,28 @@ body {
 
 .input-group input{
   background: #f8f8f8;
-  padding:2rem;
+  text-transform: capitalize;
+  padding:1rem;
+  font-size: 20px;
+  border-radius: 6px;
+  width: 100%;
+  outline:none;
+  border: none;
+}
+
+.input-group .converter{
+  position:absolute;
+  right:45px;
+  outline:none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.input-group .fa-search{
+  position: absolute;
+  right:15px;
+  color: #909090;
+  font-size: 22px;
 
 }
