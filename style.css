@@ -77,3 +77,23 @@ body {
   column-gap: 10px;
 }
 
+.Highlights div{
+  height: 200px;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #48c9b0;
+  border-radius: 20px;
+  padding: 1rem;
+}
+
+.Highlights i{
+  font-size: 45px; 
+}
+
+.sun span{
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
