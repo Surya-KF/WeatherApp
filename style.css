@@ -58,3 +58,22 @@ body {
   font-size: 22px;
 
 }
+
+.weather-output{
+  width: 60%;
+  position: fixed;
+  inset:0;
+  margin-left: 40%;
+  padding: 2rem;
+  background: #f6f6f6;
+  overflow: auto;
+}
+
+.Highlights{
+  display:grid;
+  grid-template-columns: repeat(3, 350px);
+  grid-auto-flow: row;
+  row-gap: 1rem;
+  column-gap: 10px;
+}
+
