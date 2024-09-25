@@ -15,10 +15,16 @@ const userLocation = document.getElementById("userLocation"),
       PValue = document.getElementById("PValue"),
       Forecast = document.querySelector(".Forecast");
 
-WEATHER_API_ENDPOINT = "";
-WEATHER_DATA_ENDPOINT = "";
+WEATHER_API_ENDPOINT = 'http://api.openweathermap.org/data/2.5/weather?appid=9daf511b8c199c1bd7acd7ba580588a7&q=';
+WEATHER_DATA_ENDPOINT = "http://api.openweathermap.org/data/2.5/onecall?appid=9daf511b8c199c1bd7acd7ba580588a7&exclude=minutely&units=metric&";
 
-function findUserLocation(){
-    alert(1);
- }
+function findUserLocation() {
+    const city = "London";
+    fetch(WEATHER_API_ENDPOINT + city)
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.coord.lng, data.coord.lat);
+    })
+    .catch(error => console.error('Error fetching weather data:', error));
+}
 
