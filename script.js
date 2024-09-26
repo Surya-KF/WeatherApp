@@ -19,11 +19,17 @@ WEATHER_API_ENDPOINT = 'http://api.openweathermap.org/data/2.5/weather?appid=9da
 WEATHER_DATA_ENDPOINT = "http://api.openweathermap.org/data/2.5/onecall?appid=9daf511b8c199c1bd7acd7ba580588a7&exclude=minutely&units=metric&";
 
 function findUserLocation() {
-    const city = "London";
-    fetch(WEATHER_API_ENDPOINT + city)
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.coord.lng, data.coord.lat);
+    
+    fetch(WEATHER_API_ENDPOINT + userLocation.value)
+    .then((response) => response.json())
+    .then((data) => { 
+        if(data.cod != "" && data.cod !=200){
+            alert(data.message);
+        }
+        fetch(
+            WEATHER_DATA_ENDPOINT + 'lon=${data.coord.lon}&lat=${data.coord.lat}'
+        )
+        console.log(data.coord.lon, data.coord.lat);
     })
     .catch(error => console.error('Error fetching weather data:', error));
 }
