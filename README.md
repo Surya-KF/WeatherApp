@@ -59,7 +59,7 @@ To run this project locally, follow these steps:
 
 3. **API Setup**:
    - Create an account on [OpenWeatherMap](https://openweathermap.org/) and get an API key.
-   - In the `app.js` file, replace the placeholder `YOUR_API_KEY` with your OpenWeatherMap API key.
+   - In the `script.js` file, replace the placeholder `YOUR_API_KEY` with your OpenWeatherMap API key.
 
 4. **Run the App**:
    - Once the API key is set, you can run the app directly by opening the `index.html` file in any web browser.
@@ -71,7 +71,7 @@ weather-app/
 ├── css/
 │   └── styles.css          # CSS file for styling the app
 ├── js/
-│   └── app.js              # JavaScript file for fetching weather data
+│   └── script.js              # JavaScript file for fetching weather data
 ├── index.html              # Main HTML file
 └── README.md               # Project documentation
 ```
