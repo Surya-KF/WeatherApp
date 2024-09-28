@@ -32,8 +32,8 @@ function findUserLocation() {
         let currentWeather = data.list[0];
         weatherIcon.style.backgroundImage = `url(https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}@2x.png)`;
         
-        temperature.innerHTML = Math.round(currentWeather.main.temp - 273.15) + "°C";
-        feelsLike.innerHTML = "Feels like: " + Math.round(currentWeather.main.feels_like - 273.15) + "°C";
+        /*temperature.innerHTML = Math.round(currentWeather.main.temp - 273.15) + "°C";
+        feelsLike.innerHTML = "Feels like: " + Math.round(currentWeather.main.feels_like - 273.15) + "°C";*/
         description.innerHTML = currentWeather.weather[0].description;
         
         let dateObj = new Date(currentWeather.dt * 1000);
@@ -64,3 +64,19 @@ function findUserLocation() {
         alert('An error occurred while fetching the weather data.');
     });
 }
+
+let currentTemp;
+let currentFeelsLike;
+
+// When fetching data:
+currentTemp = convertTemperature(currentWeather.main.temp);
+currentFeelsLike = convertTemperature(currentWeather.main.feels_like);
+
+// When displaying:
+function displayTemperature(unit) {
+    temperature.innerHTML= unit === 'C' ? currentTemp.celsius : currentTemp.fahrenheit;
+    feelsLike.innerHTML = "Feels like: " + (unit === 'C' ? currentFeelsLike.celsius : currentFeelsLike.fahrenheit);
+}
+
+// Call this function whenever the user toggles the temperature unit
+displayTemperature('C'); // or 'F'
