@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
 </head>
 <body>
-    <div class="comtainer">
+    <div class="container">
         <div class="weather-input">
             <div class="input-group">
                 <input 
@@ -18,8 +18,8 @@
                 placeholder="search for places .."/>
 
                 <select class="converter" id="converter">
-                    <option>°C</option>
-                    <option>°F</option>
+                    <option value="C">°C</option>
+                    <option value="F">°F</option>
                 </select>
 
                 <i class="fa fa-search" onclick="findUserLocation()"></i>
@@ -45,21 +45,20 @@
                 </div>
             
                 <div class="wind-speed">
-                    WindSpeed
+                    Wind Speed
                     <i class="fa-solid fa-wind"></i>
                     <h1 id="WValue"></h1>
                 </div>
             
-            
                 <div class="sun">
                     <span>
                         <i class="fa-solid fa-sun"></i>
-                        <p><span id="SRValue"></span>Sunrise</p>
+                        <p><span id="SRValue"></span> Sunrise</p>
                     </span>
 
                     <span>
                         <i class="fa-regular fa-sun"></i>
-                        <p><span id="SSValue"></span>Sunset</p>
+                        <p><span id="SSValue"></span> Sunset</p>
                     </span>
                 </div>
             
