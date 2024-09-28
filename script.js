@@ -18,6 +18,46 @@ const userLocation = document.getElementById("userLocation"),
 const WEATHER_API_ENDPOINT = 'http://api.openweathermap.org/data/2.5/forecast?appid=9daf511b8c199c1bd7acd7ba580588a7&q=';
 const WEATHER_DATA_ENDPOINT = 'http://api.openweathermap.org/data/2.5/weather?appid=9daf511b8c199c1bd7acd7ba580588a7&q=';
 
+let isCelsius = true;
+let currentTempCelsius;
+let currentFeelsLikeCelsius;
+
+function celsiusToFahrenheit(celsius) {
+    return (celsius * 9/5) + 32;
+}
+
+function updateTemperatureDisplay() {
+    if (currentTempCelsius === undefined || currentFeelsLikeCelsius === undefined) {
+        console.error("Temperature data not available");
+        return;
+    }
+
+    if (isCelsius) {
+        temperature.innerHTML = Math.round(currentTempCelsius) + "°C";
+        feelsLike.innerHTML = "Feels like: " + Math.round(currentFeelsLikeCelsius) + "°C";
+    } else {
+        const tempF = celsiusToFahrenheit(currentTempCelsius);
+        const feelsLikeF = celsiusToFahrenheit(currentFeelsLikeCelsius);
+        temperature.innerHTML = Math.round(tempF) + "°F";
+        feelsLike.innerHTML = "Feels like: " + Math.round(feelsLikeF) + "°F";
+    }
+}
+
+function toggleTemperatureUnit() {
+    isCelsius = !isCelsius;
+    updateTemperatureDisplay();
+    updateConverterButtonText();
+}
+
+function updateConverterButtonText() {
+    converter.innerHTML = `
+        <span class="${isCelsius ? 'active' : ''}">&deg;C</span>
+        |
+        <span class="${!isCelsius ? 'active' : ''}">&deg;F</span>
+    `;
+}
+
+
 function findUserLocation() {
     fetch(WEATHER_API_ENDPOINT + userLocation.value)
     .then((response) => response.json())
@@ -32,10 +72,11 @@ function findUserLocation() {
         let currentWeather = data.list[0];
         weatherIcon.style.backgroundImage = `url(https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}@2x.png)`;
         
-        /*temperature.innerHTML = Math.round(currentWeather.main.temp - 273.15) + "°C";
-        feelsLike.innerHTML = "Feels like: " + Math.round(currentWeather.main.feels_like - 273.15) + "°C";*/
-        description.innerHTML = currentWeather.weather[0].description;
+        currentTempCelsius = currentWeather.main.temp - 273.15;
+        currentFeelsLikeCelsius = currentWeather.main.feels_like - 273.15;
+        updateTemperatureDisplay();
         
+        description.innerHTML = '<i class="fa-brands fa-cloudversify"></i> &nbsp;' +currentWeather.weather[0].description;
         let dateObj = new Date(currentWeather.dt * 1000);
         date.innerHTML = dateObj.toLocaleDateString();
         
@@ -56,7 +97,6 @@ function findUserLocation() {
         CValue.innerHTML = data.clouds.all + "%";
         PValue.innerHTML = data.main.pressure + " hPa";
         
-        // Set UV Value to N/A as we don't have access to this data
         VValue.innerHTML = `${(data.visibility / 1000).toFixed(1)} km`;
     })
     .catch(error => {
@@ -65,18 +105,10 @@ function findUserLocation() {
     });
 }
 
-let currentTemp;
-let currentFeelsLike;
-
-// When fetching data:
-currentTemp = convertTemperature(currentWeather.main.temp);
-currentFeelsLike = convertTemperature(currentWeather.main.feels_like);
-
-// When displaying:
-function displayTemperature(unit) {
-    temperature.innerHTML= unit === 'C' ? currentTemp.celsius : currentTemp.fahrenheit;
-    feelsLike.innerHTML = "Feels like: " + (unit === 'C' ? currentFeelsLike.celsius : currentFeelsLike.fahrenheit);
-}
-
-// Call this function whenever the user toggles the temperature unit
-displayTemperature('C'); // or 'F'
+// Add event listeners
+userLocation.addEventListener("keyup", (event) => {
+    if (event.key === "Enter") {
+        findUserLocation();
+    }
+});
+converter.addEventListener("click", toggleTemperatureUnit);

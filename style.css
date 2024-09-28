@@ -17,7 +17,7 @@ body {
 }
 
 .weather-input{
-  width: 40%;
+  width: 25%;
   position: fixed;
   inset: 0;
   background: #48c9b0;
@@ -68,13 +68,28 @@ body {
 }
 
 .weather-output{
-  width: 60%;
+  width: 75%;
   position: fixed;
   inset:0;
-  margin-left: 40%;
+  margin-left: 30%;
   padding: 2rem;
   background: #f6f6f6;
   overflow: auto;
+}
+
+.weather-input .feelsLike,
+.weather-input .description,
+.weather-input .date,
+.weather-input .city{
+  padding: 10px 0;
+
+}
+
+.temperature{
+  font-size:5rem;
+  text-align: center;
+  display: flex;
+  font-weight:300;
 }
 
 .Highlights{
