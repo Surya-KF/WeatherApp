@@ -15,8 +15,8 @@ const userLocation = document.getElementById("userLocation"),
       PValue = document.getElementById("PValue"),
       Forecast = document.querySelector(".Forecast");
 
-const WEATHER_API_ENDPOINT = 'http://api.openweathermap.org/data/2.5/forecast?appid=9daf511b8c199c1bd7acd7ba580588a7&q=';
-const WEATHER_DATA_ENDPOINT = 'http://api.openweathermap.org/data/2.5/weather?appid=9daf511b8c199c1bd7acd7ba580588a7&q=';
+const WEATHER_API_ENDPOINT = 'https://api.openweathermap.org/data/2.5/forecast?appid=9daf511b8c199c1bd7acd7ba580588a7&q=';
+const WEATHER_DATA_ENDPOINT = 'https://api.openweathermap.org/data/2.5/weather?appid=9daf511b8c199c1bd7acd7ba580588a7&q=';
 
 let currentTempCelsius;
 let currentFeelsLikeCelsius;
