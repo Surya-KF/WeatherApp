@@ -134,8 +134,9 @@ function displayWeeklyForecast(forecastData) {
             <img src="https://openweathermap.org/img/wn/${icon}.png" alt="${description}">
             <div class="forecast-description">${description}</div>
             <div class="forecast-temp">
-                <span>Max: ${Math.round(maxTemp)}°C</span>
-                <span>Min: ${Math.round(minTemp)}°C</span>
+                <span> <i class="fa-solid fa-temperature-high"></i>Max: ${Math.round(maxTemp)}°C</span>
+                <br>
+                <span><i class="fa-solid fa-temperature-low"></i> Min: ${Math.round(minTemp)}°C</span>
             </div>
         `;
 
