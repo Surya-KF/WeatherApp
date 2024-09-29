@@ -12,7 +12,8 @@ const userLocation = document.getElementById("userLocation"),
       SSValue = document.getElementById("SSValue"),
       CValue = document.getElementById("CValue"),
       VValue = document.getElementById("VValue"),
-      PValue = document.getElementById("PValue");
+      PValue = document.getElementById("PValue"),
+      Forecast = document.querySelector(".Forecast");
 
 const WEATHER_API_ENDPOINT = 'http://api.openweathermap.org/data/2.5/forecast?appid=9daf511b8c199c1bd7acd7ba580588a7&q=';
 const WEATHER_DATA_ENDPOINT = 'http://api.openweathermap.org/data/2.5/weather?appid=9daf511b8c199c1bd7acd7ba580588a7&q=';
@@ -93,11 +94,65 @@ function findUserLocation() {
         CValue.innerHTML = data.clouds.all + "%";
         PValue.innerHTML = data.main.pressure + " hPa";
         VValue.innerHTML = `${(data.visibility / 1000).toFixed(1)} km`;
+
+        // Fetch forecast data for the week
+        return fetch(WEATHER_API_ENDPOINT + userLocation.value);
+    })
+    .then((response) => response.json())
+    .then((forecastData) => {
+        displayWeeklyForecast(forecastData);
     })
     .catch(error => {
         console.error('Error:', error);
         alert('An error occurred while fetching the weather data.');
     });
+}
+
+// Function to display the weekly forecast
+function displayWeeklyForecast(forecastData) {
+    Forecast.innerHTML = ''; // Clear previous forecast
+    const dailyData = groupForecastByDay(forecastData.list);
+
+    dailyData.forEach(day => {
+        const dayElement = document.createElement("div");
+        dayElement.classList.add("day-forecast");
+
+        const forecastDate = new Date(day[0].dt * 1000);
+        const dayName = forecastDate.toLocaleDateString("en-US", { weekday: 'long' });
+        const date = forecastDate.toLocaleDateString("en-US", { month: 'short', day: 'numeric' });
+        
+        const icon = day[0].weather[0].icon;
+        const description = day[0].weather[0].description;
+        const maxTemp = Math.max(...day.map(d => d.main.temp)) - 273.15;
+        const minTemp = Math.min(...day.map(d => d.main.temp)) - 273.15;
+
+        dayElement.innerHTML = `
+            <div class="forecast-day">
+                <span>${dayName}</span><br/>
+                <span>${date}</span>
+            </div>
+            <img src="https://openweathermap.org/img/wn/${icon}.png" alt="${description}">
+            <div class="forecast-description">${description}</div>
+            <div class="forecast-temp">Max: ${Math.round(maxTemp)}°C / Min: ${Math.round(minTemp)}°C</div>
+        `;
+
+        Forecast.appendChild(dayElement);
+    });
+}
+
+
+// Group forecast data by day
+function groupForecastByDay(forecastList) {
+    const days = {};
+    forecastList.forEach((forecast) => {
+        const date = new Date(forecast.dt * 1000).toLocaleDateString("en-US");
+        if (!days[date]) {
+            days[date] = [];
+        }
+        days[date].push(forecast);
+    });
+
+    return Object.values(days);
 }
 
 // Add event listeners
