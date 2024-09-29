@@ -11,8 +11,8 @@ const userLocation = document.getElementById("userLocation"),
       SRValue = document.getElementById("SRValue"),
       SSValue = document.getElementById("SSValue"),
       CValue = document.getElementById("CValue"),
-      VValue = document.getElementById("VValue"),
       PValue = document.getElementById("PValue"),
+      VValue = document.getElementById("VValue"),
       Forecast = document.querySelector(".Forecast");
 
 const WEATHER_API_ENDPOINT = 'https://api.openweathermap.org/data/2.5/forecast?appid=9daf511b8c199c1bd7acd7ba580588a7&q=';
@@ -71,12 +71,18 @@ function findUserLocation() {
         
         const options = {
             weekday: "long",
+            year: "numeric",
             month: "long",
             day: "numeric",
-            minute: "numeric",
-            hour: "numeric"
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone // Use local time zone
         };
-        date.innerHTML = getLongFormatDateTime(currentWeather.dt, timezone_offset, options);
+        
+        // Get the current date and time in the local timezone
+        const localDateTime = new Date();
+        date.innerHTML = localDateTime.toLocaleString("en-US", options);
         
         HValue.innerHTML = currentWeather.main.humidity + "%";
         WValue.innerHTML = currentWeather.wind.speed + " m/s";
@@ -86,8 +92,8 @@ function findUserLocation() {
     })
     .then((response) => response.json())
     .then((data) => {
-        let sunriseTime = new Date((data.sys.sunrise + data.timezone) * 1000).toLocaleTimeString(); // Adjust for timezone
-        let sunsetTime = new Date((data.sys.sunset + data.timezone) * 1000).toLocaleTimeString(); // Adjust for timezone
+        let sunriseTime = new Date(data.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        let sunsetTime = new Date(data.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         SRValue.innerHTML = sunriseTime;
         SSValue.innerHTML = sunsetTime;
         
@@ -112,7 +118,7 @@ function findUserLocation() {
 function displayWeeklyForecast(forecastData) {
     Forecast.innerHTML = ''; // Clear previous forecast
     const dailyData = groupForecastByDay(forecastData.list);
-
+    
     dailyData.slice(0, 6).forEach(day => {
         const dayElement = document.createElement("div");
         dayElement.classList.add("day-forecast");
@@ -120,21 +126,27 @@ function displayWeeklyForecast(forecastData) {
         const forecastDate = new Date(day[0].dt * 1000);
         const dayName = forecastDate.toLocaleDateString("en-US", { weekday: 'short' });
         const date = forecastDate.toLocaleDateString("en-US", { month: 'short', day: 'numeric' });
-        
+
         const icon = day[0].weather[0].icon;
         const description = day[0].weather[0].description;
         const maxTemp = Math.max(...day.map(d => d.main.temp)) - 273.15;
         const minTemp = Math.min(...day.map(d => d.main.temp)) - 273.15;
+
+        // Check if the current forecast time is during the day or night
+        const isDayTime = icon.includes('d');
+
+        // Use different icon URL based on day/night
+        const iconURL = `https://openweathermap.org/img/wn/${icon}${isDayTime ? '' : '@2x'}.png`;
 
         dayElement.innerHTML = `
             <div class="forecast-day">
                 <span>${dayName}</span>
                 <span>${date}</span>
             </div>
-            <img src="https://openweathermap.org/img/wn/${icon}.png" alt="${description}">
+            <img src="${iconURL}" alt="${description}">
             <div class="forecast-description">${description}</div>
             <div class="forecast-temp">
-                <span> <i class="fa-solid fa-temperature-high"></i>Max: ${Math.round(maxTemp)}°C</span>
+                <span><i class="fa-solid fa-temperature-high"></i> Max: ${Math.round(maxTemp)}°C</span>
                 <br>
                 <span><i class="fa-solid fa-temperature-low"></i> Min: ${Math.round(minTemp)}°C</span>
             </div>
@@ -143,7 +155,6 @@ function displayWeeklyForecast(forecastData) {
         Forecast.appendChild(dayElement);
     });
 }
-
 
 // Group forecast data by day
 function groupForecastByDay(forecastList) {
@@ -166,13 +177,7 @@ userLocation.addEventListener("keyup", (event) => {
     }
 });
 
-// Update temperature display when the converter changes
-converter.addEventListener("change", (event) => {
-    updateTemperatureDisplay(event.target.value);
+converter.addEventListener("change", () => {
+    const selectedUnit = converter.value;
+    updateTemperatureDisplay(selectedUnit);
 });
-
-// Function to format date/time with timezone offset
-function getLongFormatDateTime(unixTimestamp, timezoneOffset, options) {
-    let date = new Date((unixTimestamp + timezoneOffset) * 1000); // Adjust for timezone
-    return date.toLocaleString("en-US", options); // Apply any options for formatting
-}
