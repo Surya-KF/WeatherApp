@@ -113,12 +113,12 @@ function displayWeeklyForecast(forecastData) {
     Forecast.innerHTML = ''; // Clear previous forecast
     const dailyData = groupForecastByDay(forecastData.list);
 
-    dailyData.forEach(day => {
+    dailyData.slice(0, 6).forEach(day => {
         const dayElement = document.createElement("div");
         dayElement.classList.add("day-forecast");
 
         const forecastDate = new Date(day[0].dt * 1000);
-        const dayName = forecastDate.toLocaleDateString("en-US", { weekday: 'long' });
+        const dayName = forecastDate.toLocaleDateString("en-US", { weekday: 'short' });
         const date = forecastDate.toLocaleDateString("en-US", { month: 'short', day: 'numeric' });
         
         const icon = day[0].weather[0].icon;
@@ -128,12 +128,15 @@ function displayWeeklyForecast(forecastData) {
 
         dayElement.innerHTML = `
             <div class="forecast-day">
-                <span>${dayName}</span><br/>
+                <span>${dayName}</span>
                 <span>${date}</span>
             </div>
             <img src="https://openweathermap.org/img/wn/${icon}.png" alt="${description}">
             <div class="forecast-description">${description}</div>
-            <div class="forecast-temp">Max: ${Math.round(maxTemp)}°C / Min: ${Math.round(minTemp)}°C</div>
+            <div class="forecast-temp">
+                <span>Max: ${Math.round(maxTemp)}°C</span>
+                <span>Min: ${Math.round(minTemp)}°C</span>
+            </div>
         `;
 
         Forecast.appendChild(dayElement);

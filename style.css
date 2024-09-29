@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
 * {
   margin: 0px;
   padding: 0px;
@@ -8,15 +9,14 @@
 
 body {
   height: 100vh;
-  
 }
 
-.container{
+.container {
   display: flex;
   align-items: center;
 }
 
-.weather-input{
+.weather-input {
   width: 25%;
   position: fixed;
   inset: 0;
@@ -24,7 +24,7 @@ body {
   padding: 1rem 2.5rem;
 }
 
-.weatherIcon{
+.weatherIcon {
   background-position: 50% !important;
   background-repeat: no-repeat !important;
   background-size: contain;
@@ -32,45 +32,45 @@ body {
   height: 25%;
   margin: 2rem auto;
 }
-.input-group{
+
+.input-group {
   position: relative;
   display: flex;
   align-items: center;
   margin: 2rem 0;
 }
 
-.input-group input{
+.input-group input {
   background: #f8f8f8;
   text-transform: capitalize;
-  padding:1rem;
+  padding: 1rem;
   font-size: 20px;
   border-radius: 6px;
   width: 100%;
-  outline:none;
+  outline: none;
   border: none;
 }
 
-.input-group .converter{
-  position:absolute;
-  right:45px;
-  outline:none;
+.input-group .converter {
+  position: absolute;
+  right: 45px;
+  outline: none;
   border: none;
   font-size: 18px;
   cursor: pointer;
 }
 
-.input-group .fa-search{
+.input-group .fa-search {
   position: absolute;
-  right:15px;
+  right: 15px;
   color: #909090;
   font-size: 22px;
-
 }
 
-.weather-output{
+.weather-output {
   width: 75%;
   position: fixed;
-  inset:0;
+  inset: 0;
   margin-left: 25%;
   padding: 2rem;
   background: #f6f6f6;
@@ -80,53 +80,92 @@ body {
 .weather-input .feelsLike,
 .weather-input .description,
 .weather-input .date,
-.weather-input .city{
+.weather-input .city {
   padding: 10px 0;
-
 }
 
-.temperature{
-  font-size:5rem;
+.temperature {
+  font-size: 5rem;
   text-align: center;
   display: flex;
-  font-weight:300;
+  font-weight: 300;
 }
 
-.Highlights{
-  display:grid;
-  grid-template-columns: repeat(3, 350px);
-  grid-auto-flow: row;
-  row-gap: 1rem;
-  column-gap: 10px;
-}
-
-.Highlights div{
-  height: 200px;
+.Highlights, .Forecast {
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.Highlights div, .Forecast .day-forecast {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   background-color: #48c9b0;
   border-radius: 20px;
   padding: 1rem;
+  color: black;
 }
 
-.Highlights i{
-  font-size: 45px; 
+.Highlights i {
+  font-size: 45px;
+  margin-bottom: 0.5rem;
 }
 
-.sun span{
+.sun span {
   align-items: center;
   display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
-.Forecast{
-  display:grid;
-  grid-template-columns: repeat(3, 350px);
-  grid-auto-flow: row;
-  row-gap: 1rem;
-  column-gap: 10px;
+.day-forecast .forecast-day {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
 }
 
+.day-forecast img {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 0.5rem;
+}
 
+.day-forecast .forecast-description {
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.day-forecast .forecast-temp {
+  font-size: 0.9em;
+}
+
+.heading {
+  margin: 2rem 0 1rem;
+  color: #333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .Highlights, .Forecast {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+  
+  .weather-input, .weather-output {
+    width: 100%;
+    position: static;
+    margin-left: 0;
+  }
+  
+  .Highlights, .Forecast {
+    grid-template-columns: 1fr;
+  }
+}
