@@ -8,6 +8,21 @@ Here’s a complete README for your Weather App project, incorporating emojis an
 
 Welcome to the **Weather App**! This is a **responsive** web application built using **HTML**, **CSS**, and **JavaScript**. It allows users to search for the current weather conditions in any city worldwide. The app fetches real-time weather data from the **OpenWeatherMap API** and displays details like temperature, humidity, wind speed, and weather conditions with icons. The design is fully responsive, providing an optimized user experience on desktops, tablets, and mobile devices.
 
+---
+
+## Screenshots
+
+![Weather Details](assets/screenshot1.png)
+*Weather Details - Displaying current weather conditions*
+
+---
+
+## Live Demo
+
+You can try out the live version of the Weather App here: [Live Demo](https://surya-kf.github.io/WeatherApp/)
+
+---
+
 ## Key Features
 
 - **🔍 Search Functionality**: Search for any city and get real-time weather updates.
@@ -92,19 +107,6 @@ weather-app/
 
 2. **🌦️ View Weather Data**:
    - The weather details for the searched city will be displayed with temperature, conditions, wind speed, and more.
-
----
-
-## Screenshots
-
-![Weather Details](assets/screenshot1.png)
-*Weather Details - Displaying current weather conditions*
-
----
-
-## Live Demo
-
-You can try out the live version of the Weather App here: [Live Demo](https://surya-kf.github.io/WeatherApp/)
 
 ---
 
