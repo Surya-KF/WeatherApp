@@ -84,6 +84,25 @@ body {
   padding: 10px 0;
 }
 
+.date-line {
+  font-size: 1.1em;
+  margin-bottom: 5px;
+}
+
+.time-line {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.date {
+  text-align: relative;
+  font-weight: bold;
+}
+
+.city{
+  font-weight: bold;
+}
+
 .temperature {
   font-size: 5rem;
   text-align: center;

@@ -21,12 +21,10 @@ const WEATHER_DATA_ENDPOINT = 'https://api.openweathermap.org/data/2.5/weather?a
 let currentTempCelsius;
 let currentFeelsLikeCelsius;
 
-// Function to convert Celsius to Fahrenheit
 function celsiusToFahrenheit(celsius) {
     return (celsius * 9/5) + 32;
 }
 
-// Function to update the temperature display based on selected unit
 function updateTemperatureDisplay(unit) {
     if (currentTempCelsius === undefined || currentFeelsLikeCelsius === undefined) {
         console.error("Temperature data not available");
@@ -44,7 +42,37 @@ function updateTemperatureDisplay(unit) {
     }
 }
 
-// Function to find the user location and fetch weather data
+function getLocationDateTime(timezone_offset) {
+    const now = new Date();
+    const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const locationTime = new Date(utcTime + (timezone_offset * 1000));
+    
+    const dateOptions = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+    };
+    
+    const timeOptions = {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true
+    };
+    
+    const formattedDate = locationTime.toLocaleString("en-US", dateOptions);
+    const formattedTime = locationTime.toLocaleString("en-US", timeOptions);
+    
+    return `<div class="date-line">${formattedDate}</div>
+            <div class="time-line">${formattedTime}</div>`;
+}
+
+function convertToLocalTime(utcTimestamp, timezone_offset) {
+    const date = new Date(utcTimestamp * 1000);
+    const utcTime = date.getTime() + (date.getTimezoneOffset() * 60000);
+    return new Date(utcTime + (timezone_offset * 1000));
+}
+
 function findUserLocation() {
     fetch(WEATHER_API_ENDPOINT + userLocation.value)
     .then((response) => response.json())
@@ -69,39 +97,27 @@ function findUserLocation() {
         
         description.innerHTML = '<i class="fa-brands fa-cloudversify"></i> &nbsp;' + currentWeather.weather[0].description;
         
-        const options = {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone // Use local time zone
-        };
-        
-        // Get the current date and time in the local timezone
-        const localDateTime = new Date();
-        date.innerHTML = localDateTime.toLocaleString("en-US", options);
+        date.innerHTML = getLocationDateTime(timezone_offset);
         
         HValue.innerHTML = currentWeather.main.humidity + "%";
         WValue.innerHTML = currentWeather.wind.speed + " m/s";
         
-        // Fetch additional weather data
         return fetch(WEATHER_DATA_ENDPOINT + userLocation.value);
     })
     .then((response) => response.json())
     .then((data) => {
-        let sunriseTime = new Date(data.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        let sunsetTime = new Date(data.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        SRValue.innerHTML = sunriseTime;
-        SSValue.innerHTML = sunsetTime;
+        const timezone_offset = data.timezone;
+        
+        const sunriseLocal = convertToLocalTime(data.sys.sunrise, timezone_offset);
+        const sunsetLocal = convertToLocalTime(data.sys.sunset, timezone_offset);
+        
+        SRValue.innerHTML = sunriseLocal.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        SSValue.innerHTML = sunsetLocal.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         
         CValue.innerHTML = data.clouds.all + "%";
         PValue.innerHTML = data.main.pressure + " hPa";
         VValue.innerHTML = `${(data.visibility / 1000).toFixed(1)} km`;
 
-        // Fetch forecast data for the week
         return fetch(WEATHER_API_ENDPOINT + userLocation.value);
     })
     .then((response) => response.json())
@@ -114,16 +130,16 @@ function findUserLocation() {
     });
 }
 
-// Function to display the weekly forecast
 function displayWeeklyForecast(forecastData) {
-    Forecast.innerHTML = ''; // Clear previous forecast
-    const dailyData = groupForecastByDay(forecastData.list);
+    Forecast.innerHTML = '';
+    const timezone_offset = forecastData.city.timezone;
+    const dailyData = groupForecastByDay(forecastData.list, timezone_offset);
     
     dailyData.slice(0, 6).forEach(day => {
         const dayElement = document.createElement("div");
         dayElement.classList.add("day-forecast");
 
-        const forecastDate = new Date(day[0].dt * 1000);
+        const forecastDate = convertToLocalTime(day[0].dt, timezone_offset);
         const dayName = forecastDate.toLocaleDateString("en-US", { weekday: 'short' });
         const date = forecastDate.toLocaleDateString("en-US", { month: 'short', day: 'numeric' });
 
@@ -132,10 +148,7 @@ function displayWeeklyForecast(forecastData) {
         const maxTemp = Math.max(...day.map(d => d.main.temp)) - 273.15;
         const minTemp = Math.min(...day.map(d => d.main.temp)) - 273.15;
 
-        // Check if the current forecast time is during the day or night
         const isDayTime = icon.includes('d');
-
-        // Use different icon URL based on day/night
         const iconURL = `https://openweathermap.org/img/wn/${icon}${isDayTime ? '' : '@2x'}.png`;
 
         dayElement.innerHTML = `
@@ -156,21 +169,21 @@ function displayWeeklyForecast(forecastData) {
     });
 }
 
-// Group forecast data by day
-function groupForecastByDay(forecastList) {
+// Fixed groupForecastByDay function
+function groupForecastByDay(forecastList, timezone_offset) {
     const days = {};
     forecastList.forEach((forecast) => {
-        const date = new Date(forecast.dt * 1000).toLocaleDateString("en-US");
-        if (!days[date]) {
-            days[date] = [];
+        const localDate = convertToLocalTime(forecast.dt, timezone_offset)
+            .toLocaleDateString("en-US");
+        if (!days[localDate]) {
+            days[localDate] = [];
         }
-        days[date].push(forecast);
+        days[localDate].push(forecast);
     });
 
     return Object.values(days);
 }
 
-// Add event listeners
 userLocation.addEventListener("keyup", (event) => {
     if (event.key === "Enter") {
         findUserLocation();
