@@ -1,6 +1,3 @@
-Here’s a complete README for your Weather App project, incorporating emojis and a well-structured format:
-
----
 
 # Weather App 🌤️
 
